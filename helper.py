@@ -8,7 +8,11 @@ import numpy as np
 from PIL import Image
 
 
-for i in range(0,50):
-    im = Image.open("screenshot-{}.png".format(i)) # Can be many different formats.
-    pix = im.load()
-    print sum(pix[330,291]),
+import pandas
+
+l = [1,2,3,4]
+ll = [5,6,7,8]
+
+
+df = pandas.DataFrame(data={"col1": l, "col2": ll})
+df.to_csv("file.csv", sep=',',index=False)
