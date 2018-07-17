@@ -23,7 +23,7 @@ with open("1/out.csv" , "r") as f :
 
 def parse_function(filename,basewidth):
     img = Image.open(filename).convert('L')
-    img = PIL.ImageOps.invert(img)
+    #img = PIL.ImageOps.invert(img)
     wpercent = (basewidth/float(img.size[0]))
     hsize = int((float(img.size[1])*float(wpercent)))
     img = img.resize((basewidth,hsize), Image.ANTIALIAS)    
@@ -38,9 +38,9 @@ print "Loaded all Images"
 print "Starting Training on NN ( Tensorflow ) " 
 
 '''
-Using a Neural Network with No Hidden Layers with 55 input layers with 200 values each. giving a total of 55 * 200 Values.
+Using a Neural Network with No Hidden Layers with 55*200 input layers. total of 55 * 200 Values.
 
-The weight dimentions are 200 * 1 , input is 1 * 200
+The weight dimentions are (55 * 200) * 1 , input is 1 *  ( 55 * 200 )
 
 Output is single neuron ( 1 - Neuron Fired -- Jump ) else ( Leave )
 
@@ -50,7 +50,7 @@ print sum(x_v[0])
 
 # Parameters
 #learning_rate = .00000000001
-learning_rate =  .00000001
+learning_rate =  .0000000001
 training_epochs = 100
 batch_size = 100
 display_step = 1
