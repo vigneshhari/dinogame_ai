@@ -101,7 +101,9 @@ with tf.Session() as sess:
     variable = 1
     while True:
         if( elem.get_attribute("class") == "offline" ):continue
-        if(driver.execute_script("return Runner.instance_.playing;") == False ):continue
+        if(driver.execute_script("return Runner.instance_.playing;") == False ):
+            elem.send_keys(Keys.SPACE)
+            continue
         
         driver.save_screenshot("temp/screenshot-{}.png".format(variable))
         img = cv2.imread("temp/screenshot-{}.png".format( variable))
@@ -115,4 +117,3 @@ with tf.Session() as sess:
 
         if(round(sess.run(pred , feed_dict={x : [np.array(value).flatten()]})) == 0) :
             elem.send_keys(Keys.SPACE)
-
