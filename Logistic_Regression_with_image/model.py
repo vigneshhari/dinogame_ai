@@ -35,7 +35,7 @@ y_v = action
 
 print "Loaded all Images"
 
-print "Starting Training on NN ( Tensorflow ) " 
+print "Starting Training NN ( Tensorflow ) " 
 
 '''
 Using a Neural Network with No Hidden Layers with 55*200 input layers. total of 55 * 200 Values.
@@ -50,9 +50,10 @@ print sum(x_v[0])
 
 # Parameters
 #learning_rate = .00000000001
-learning_rate =  .0000000001
+#learning_rate =  .0000000000001
+learning_rate =  .00000000000000001
 training_epochs = 100
-batch_size = 100
+batch_size = 1
 display_step = 1
 
 tf.set_random_seed(777)  
@@ -66,7 +67,7 @@ pred = tf.nn.sigmoid(tf.matmul(x, W) + b )
 
 
 #cost = tf.reduce_mean(-1 * (tf.reduce_sum(y*tf.log(pred) + tf.reduce_sum( (y-1)*tf.log(pred -1) ) )))
-cost = tf.reduce_mean(-1 * (tf.reduce_sum(y*tf.log(pred  + 1e-30 ))  ) ) 
+cost = tf.reduce_mean(-1 * (tf.reduce_sum(y*tf.log(pred   ))  ) ) 
 
 optimizer = tf.train.GradientDescentOptimizer(learning_rate).minimize(cost)
 
@@ -80,11 +81,18 @@ with tf.Session() as sess:
     sess.run(init)
 
     for epoch in range(training_epochs):
+        epoch_loss = 0
+        print sess.run(W, feed_dict={x: x_v,y: y_v})
+        for i in range(int(len(files)//batch_size)):
+            epoch_x, epoch_y = x_v[ (i * batch_size) : (i +1 ) * batch_size ] , y_v[ (i * batch_size) : (i +1 ) * batch_size ] 
+            #print sess.run(max_pool1, feed_dict={x_inp: epoch_x, y: epoch_y}).shape
+            _, c , w = sess.run([optimizer, cost, W], feed_dict={x: x_v,y: y_v})
+            print sum(w) , c
+            epoch_loss += c
 
-        _, c , w = sess.run([optimizer, cost, W], feed_dict={x: x_v,y: y_v})
         print sum(w)
         if (epoch+1) % display_step == 0:
-            print("Epoch:", '%04d' % (epoch+1), "cost=", "{}".format(c))
+            print("Epoch:", '%04d' % (epoch+1), "cost=", "{}".format(epoch_loss))
 
     print(sess.run([accuracy , pred] ,feed_dict={x: x_v,y: y_v }))
 
@@ -115,5 +123,9 @@ with tf.Session() as sess:
 
         value = parse_function("temp/train-1.png",200)
 
-        if(round(sess.run(pred , feed_dict={x : [np.array(value).flatten()]})) == 0) :
+        value = sess.run(pred , feed_dict={x : [np.array(value).flatten()]})
+
+        print value
+
+        if(round(value) == 0) :
             elem.send_keys(Keys.SPACE)

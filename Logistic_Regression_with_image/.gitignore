@@ -1,4 +1,5 @@
 # Don't track content of these folders
 screens/  
-1/
+Logistic_Regression_with_image/1/
+CNN_with_image/1/
 temp/
